@@ -151,7 +151,7 @@ function respond() {
     var intervalObject = {};
 //     getGroupIdFromBotId();
     var request = JSON.parse(this.req.chunks[0]),
-    botRegex = /^\/ready to slap trolls$/,
+    botRegex = /^\/cool guy$/,
     botStopRegex = /^\/stop slapping trolls$/;
 
     if(request.text && botRegex.test(request.text)) {
@@ -159,9 +159,9 @@ function respond() {
         postMessage();
         this.res.end();
         // This interval is critical to keep checking the messages
-        intervalObject = setInterval(function() {
-            scanMessagesForRejoin();
-        }, 1000)
+//         intervalObject = setInterval(function() {
+//             scanMessagesForRejoin();
+//         }, 1000)
     } 
     else if(request.text && botStopRegex.test(request.text)) {
         clearInterval(intervalObject);
