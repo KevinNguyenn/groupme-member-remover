@@ -56,6 +56,7 @@ function scanMessagesForRejoin() {
 }
 
 function getGroupIdFromBotId() {
+    console.log("getting group id");
     var options = {
         hostname: 'api.groupme.com',
         path: '/v3/bots',
@@ -66,6 +67,7 @@ function getGroupIdFromBotId() {
 
     var req = HTTPS.request(options, function(res) {
         if(res.statusCode == 202) {
+            console.log("nice...");
             res.on('data', function(chunk) {
                 output += chunk;
             });
@@ -86,7 +88,7 @@ function getGroupIdFromBotId() {
     req.on('error', function(err) {
         console.log("error fetching")
     })
-
+    console.log("closing");
     req.end();
 }
 
@@ -144,6 +146,7 @@ function removeUser(trollUser) {
 
 // Main function
 function respond() {
+    console.log("enter here");
     var intervalObject = {};
     getGroupIdFromBotId();
     var request = JSON.parse(this.req.chunks[0]),
