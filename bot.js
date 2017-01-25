@@ -151,10 +151,9 @@ function respond() {
     botStopRegex = /^\/stop slapping trolls$/;
 
     if(request.text && botRegex.test(request.text)) {
-        // this.res.writeHead(200);
-        // postMessage();
-        // this.res.end();
+        this.res.writeHead(200);
         postMessage();
+        this.res.end();
         // This interval is critical to keep checking the messages
         intervalObject = setInterval(function() {
             scanMessagesForRejoin();
