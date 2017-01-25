@@ -151,7 +151,7 @@ function respond() {
     var intervalObject = {};
 //     getGroupIdFromBotId();
     var request = JSON.parse(this.req.chunks[0]),
-    botRegex = /^\/cool guy$/,
+    botRegex = /^\/ready to slap trolls$/,
     botStopRegex = /^\/stop slapping trolls$/;
 
     if(request.text && botRegex.test(request.text)) {
@@ -178,7 +178,7 @@ function postMessage() {
   var botResponse, options, body, botReq;
 
 //   botResponse = cool();
-  botResponse = "Let's wipeout these wild people. " + cool(); 
+  botResponse = 'Let''s wipeout these wild people. '; 
 
   options = {
     hostname: 'api.groupme.com',
