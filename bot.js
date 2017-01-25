@@ -1,3 +1,4 @@
+
 var HTTPS = require('https');
 var cool = require('cool-ascii-faces');
 var _ = require('lodash');
@@ -15,7 +16,7 @@ var trollUsers = [];
 function scanMessagesForRejoin() {
     var options = {
         hostname: 'api.groupme.com',
-        path: '/v3/groups/' + groupId + '/messages?limit=5&token=' + userToken 
+        path: '/v3/groups/' + groupId + '/messages?limit=5&token=' + userToken, 
         method: 'GET'
     }
 
@@ -177,7 +178,7 @@ function postMessage() {
   var botResponse, options, body, botReq;
 
   // botResponse = cool();
-  botResponse = 'Let''s wipeout these wild people. ' + cool();
+  botResponse = "Let's wipeout these wild people. " + cool(); 
 
   options = {
     hostname: 'api.groupme.com',
