@@ -13,6 +13,7 @@ var warningUsers = [];
 var trollUsers = [];
 
 function scanMessagesForRejoin() {
+    alert("scan messages for rejoin");
     var options = {
         hostname: 'api.groupme.com',
         path: '/v3/groups/' + groupId + '/messages?limit=5&token=' + userToken, 
@@ -146,11 +147,11 @@ function removeUser(trollUser) {
 
 // Main function
 function respond() {
-    console.log("enter here");
+    alert("enter here");
     var intervalObject = {};
 //     getGroupIdFromBotId();
     var request = JSON.parse(this.req.chunks[0]),
-    botRegex = /^\/cool guy$/,
+    botRegex = /^\/ready to slap trolls$/,
     botStopRegex = /^\/stop slapping trolls$/;
 
     if(request.text && botRegex.test(request.text)) {
@@ -158,9 +159,9 @@ function respond() {
         postMessage();
         this.res.end();
         // This interval is critical to keep checking the messages
-//         intervalObject = setInterval(function() {
-//             scanMessagesForRejoin();
-//         }, 1000)
+        intervalObject = setInterval(function() {
+            scanMessagesForRejoin();
+        }, 1000)
     } 
     else if(request.text && botStopRegex.test(request.text)) {
         clearInterval(intervalObject);
