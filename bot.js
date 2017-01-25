@@ -155,7 +155,7 @@ function respond() {
     botStopRegex = /^\/stop slapping trolls$/;
 
     if(request.text && botRegex.test(request.text)) {
-        this.res.writeHead(200, {'Content-Type': 'text/plain'});
+        this.res.writeHead(200, {'Content-Type': 'application/json'});
         postMessage();
         this.res.end();
         // This interval is critical to keep checking the messages
