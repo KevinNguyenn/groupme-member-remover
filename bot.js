@@ -1,7 +1,6 @@
 
 var HTTPS = require('https');
 var cool = require('cool-ascii-faces');
-var _ = require('lodash');
 
 // INSERT TOKEN HERE
 var userToken = '5TLh7xi39LdkO2uEqk1UER6YsgMpReJkwDrByqIr';
