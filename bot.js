@@ -177,8 +177,8 @@ function respond() {
 function postMessage() {
   var botResponse, options, body, botReq;
 
-  botResponse = cool();
-//   botResponse = "Let's wipeout these wild people. " + cool(); 
+//   botResponse = cool();
+  botResponse = "Let's wipeout these wild people. " + cool(); 
 
   options = {
     hostname: 'api.groupme.com',
