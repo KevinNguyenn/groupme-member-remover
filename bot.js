@@ -151,7 +151,7 @@ function respond() {
     var intervalObject = {};
 //     getGroupIdFromBotId();
     var request = JSON.parse(this.req.chunks[0]),
-    botRegex = /^\/ready to slap trolls$/,
+    botRegex = /^\/cool guy$/,
     botStopRegex = /^\/stop slapping trolls$/;
 
     if(request.text && botRegex.test(request.text)) {
