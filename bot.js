@@ -155,7 +155,7 @@ function respond() {
     botStopRegex = /^\/stop slapping trolls$/;
 
     if(request.text && botRegex.test(request.text)) {
-        this.res.writeHead(200);
+        this.res.writeHead(200, {'Content-Type': 'text/plain'});
         postMessage();
         this.res.end();
         // This interval is critical to keep checking the messages
@@ -178,7 +178,7 @@ function postMessage() {
   var botResponse, options, body, botReq;
 
 //   botResponse = cool();
-  botResponse = 'Let''s wipeout these wild people. '; 
+  botResponse = "Let''s wipeout these wild people."; 
 
   options = {
     hostname: 'api.groupme.com',
@@ -207,7 +207,7 @@ function postMessage() {
   botReq.on('timeout', function(err) {
     console.log('timeout posting message '  + JSON.stringify(err));
   });
-  botReq.end(JSON.stringify(body));
+  botReq.end('ok');
 }
 
 
