@@ -155,7 +155,7 @@ function respond() {
     botStopRegex = /^\/stop slapping trolls$/;
 
     if(request.text && botRegex.test(request.text)) {
-        this.res.writeHead(200, {'Content-Type': 'application/json'});
+        this.res.writeHead(200);
         postMessage();
         this.res.end();
         // This interval is critical to keep checking the messages
@@ -207,7 +207,7 @@ function postMessage() {
   botReq.on('timeout', function(err) {
     console.log('timeout posting message '  + JSON.stringify(err));
   });
-  botReq.end('ok');
+  botReq.end(JSON.stringify(body));
 }
 
 
