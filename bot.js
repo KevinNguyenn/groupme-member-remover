@@ -159,9 +159,9 @@ function respond() {
         postMessage();
         this.res.end();
         // This interval is critical to keep checking the messages
-        intervalObject = setInterval(function() {
-            scanMessagesForRejoin();
-        }, 1000)
+//         intervalObject = setInterval(function() {
+//             scanMessagesForRejoin();
+//         }, 1000)
     } 
     else if(request.text && botStopRegex.test(request.text)) {
         clearInterval(intervalObject);
@@ -177,8 +177,8 @@ function respond() {
 function postMessage() {
   var botResponse, options, body, botReq;
 
-  // botResponse = cool();
-  botResponse = "Let's wipeout these wild people. " + cool(); 
+  botResponse = cool();
+//   botResponse = "Let's wipeout these wild people. " + cool(); 
 
   options = {
     hostname: 'api.groupme.com',
