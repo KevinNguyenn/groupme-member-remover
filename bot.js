@@ -8,7 +8,7 @@ var userToken = '5TLh7xi39LdkO2uEqk1UER6YsgMpReJkwDrByqIr';
 
 // This bot id will be pre-determined based on the group that is selected from the GroupMe bot form.
 var botID = process.env.BOT_ID;
-var groupId = 0;
+var groupId = 27488264;
 
 var warningUsers = [];
 var trollUsers = [];
@@ -56,42 +56,42 @@ function scanMessagesForRejoin() {
     req.end();
 }
 
-function getGroupIdFromBotId() {
-    console.log("getting group id");
-    var options = {
-        hostname: 'api.groupme.com',
-        path: '/v3/bots',
-        method: 'GET'
-    }
+// function getGroupIdFromBotId() {
+//     console.log("getting group id");
+//     var options = {
+//         hostname: 'api.groupme.com',
+//         path: '/v3/bots',
+//         method: 'GET'
+//     }
 
-    var output = '';
+//     var output = '';
 
-    var req = HTTPS.request(options, function(res) {
-        if(res.statusCode == 202) {
-            console.log("nice...");
-            res.on('data', function(chunk) {
-                output += chunk;
-            });
-            res.on('end', function() {
-                var obj = JSON.parse(output);
-                console.log(obj);
-                for(var i = 0; i < obj.length; i++) {
-                    if(obj[i].bot_id == botID) {
-                        groupId = obj[i].group_id;
-                    }
-                }
-            })
-        } else {
-            console.log('rejecting bad status code ' + res.statusCode);
-        }
-    });
+//     var req = HTTPS.request(options, function(res) {
+//         if(res.statusCode == 202) {
+//             console.log("nice...");
+//             res.on('data', function(chunk) {
+//                 output += chunk;
+//             });
+//             res.on('end', function() {
+//                 var obj = JSON.parse(output);
+//                 console.log(obj);
+//                 for(var i = 0; i < obj.length; i++) {
+//                     if(obj[i].bot_id == botID) {
+//                         groupId = obj[i].group_id;
+//                     }
+//                 }
+//             })
+//         } else {
+//             console.log('rejecting bad status code ' + res.statusCode);
+//         }
+//     });
 
-    req.on('error', function(err) {
-        console.log("error fetching")
-    })
-    console.log("closing");
-    req.end();
-}
+//     req.on('error', function(err) {
+//         console.log("error fetching")
+//     })
+//     console.log("closing");
+//     req.end();
+// }
 
 
 function removeUser(trollUser) {
@@ -149,7 +149,7 @@ function removeUser(trollUser) {
 function respond() {
     console.log("enter here");
     var intervalObject = {};
-    getGroupIdFromBotId();
+//     getGroupIdFromBotId();
     var request = JSON.parse(this.req.chunks[0]),
     botRegex = /^\/ready to slap trolls$/,
     botStopRegex = /^\/stop slapping trolls$/;
