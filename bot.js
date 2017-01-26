@@ -82,7 +82,13 @@ function removeUser(trollUser) {
     });
 
     var botResponse = "eliminated. Life will be better without their EXTRA presence. " + cool();
-
+    
+    var warningUserIndex = warningUsers.indexOf(trollUser);
+    warningUsers.splice(warningUserIndex, 1);
+    
+    var trollUserIndex = trollUsers.indexOf(trollUser);
+    trollUsers.splice(trollUserIndex, 1);
+    
     options = {
         hostname: 'api.groupme.com',
         path: '/v3/bots/post',
