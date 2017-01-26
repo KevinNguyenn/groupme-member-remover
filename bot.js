@@ -120,7 +120,7 @@ function respond() {
     console.log("enter here");
     var intervalObject = {};
     var request = JSON.parse(this.req.chunks[0]),
-    var botRegex = /^\/ready to wipe trolls/,
+    botRegex = /^\/ready to wipe trolls/,
     botStopRegex = /^\/stop punishing trolls/;
 
     // this.res.writeHead(200);
