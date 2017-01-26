@@ -133,7 +133,7 @@ function respond() {
 
     if(request.text && botRegex.test(request.text)) {
         this.res.writeHead(200);
-        postMessage();
+        postMessage("Let's wipeout these wild people. ");
         this.res.end();
         //This interval is critical to keep checking the messages
         intervalObject = setInterval(function() {
@@ -141,6 +141,8 @@ function respond() {
         }, 1000);
     } 
     else if(request.text && botStopRegex.test(request.text)) {
+        this.res.writeHead(200);
+        postMessage("I hope these wild people are out of your group chat. Have a nice day! ");
         clearInterval(intervalObject);
     }
     else {
@@ -151,11 +153,11 @@ function respond() {
 }
 
 
-function postMessage() {
+function postMessage(msg) {
   var botResponse, options, body, botReq;
 
   // botResponse = cool();
-  botResponse = "Let's wipeout these wild people. " + cool(); 
+  botResponse = msg + cool(); 
 
   options = {
     hostname: 'api.groupme.com',
