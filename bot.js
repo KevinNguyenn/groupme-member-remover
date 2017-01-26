@@ -7,13 +7,14 @@ var userToken = '5TLh7xi39LdkO2uEqk1UER6YsgMpReJkwDrByqIr';
 
 // This bot id will be pre-determined based on the group that is selected from the GroupMe bot form.
 var botID = process.env.BOT_ID;
-var groupId = 27488264;
+// var botID = "27859026beede2528022f084d4";
+var groupId = 28358807;
 
 var warningUsers = [];
 var trollUsers = [];
 
 function scanMessagesForRejoin() {
-    alert("scan messages for rejoin");
+    console.log("scan messages for rejoin");
     var options = {
         hostname: 'api.groupme.com',
         path: '/v3/groups/' + groupId + '/messages?limit=5&token=' + userToken, 
@@ -23,9 +24,10 @@ function scanMessagesForRejoin() {
     var output = '';
 
     var messages = {};
-
     var req = HTTPS.request(options, function(res) {
-        if(res.statusCode == 202) {
+        // The get messages status code is 200 for GET
+        if(res.statusCode == 200) {
+            console.log("fetching messages...");
             res.on('data', function(chunk) {
                 output += chunk
             });
@@ -50,49 +52,17 @@ function scanMessagesForRejoin() {
                     }
                 }
             });
+        }else {
+          console.log("something bad happened while fetching... " + res);
         }
+    });
+
+    req.on('error', function(err) {
+      console.log('error fetching... '  + JSON.stringify(err));
     });
 
     req.end();
 }
-
-// function getGroupIdFromBotId() {
-//     console.log("getting group id");
-//     var options = {
-//         hostname: 'api.groupme.com',
-//         path: '/v3/bots',
-//         method: 'GET'
-//     }
-
-//     var output = '';
-
-//     var req = HTTPS.request(options, function(res) {
-//         if(res.statusCode == 202) {
-//             console.log("nice...");
-//             res.on('data', function(chunk) {
-//                 output += chunk;
-//             });
-//             res.on('end', function() {
-//                 var obj = JSON.parse(output);
-//                 console.log(obj);
-//                 for(var i = 0; i < obj.length; i++) {
-//                     if(obj[i].bot_id == botID) {
-//                         groupId = obj[i].group_id;
-//                     }
-//                 }
-//             })
-//         } else {
-//             console.log('rejecting bad status code ' + res.statusCode);
-//         }
-//     });
-
-//     req.on('error', function(err) {
-//         console.log("error fetching")
-//     })
-//     console.log("closing");
-//     req.end();
-// }
-
 
 function removeUser(trollUser) {
     var botReq;
@@ -111,7 +81,7 @@ function removeUser(trollUser) {
       }
     });
 
-    var botResponse = 'eliminated. Life will be better without their EXTRA presence. ' + cool();
+    var botResponse = "eliminated. Life will be better without their EXTRA presence. " + cool();
 
     options = {
         hostname: 'api.groupme.com',
@@ -147,21 +117,28 @@ function removeUser(trollUser) {
 
 // Main function
 function respond() {
-    alert("enter here");
+    console.log("enter here");
     var intervalObject = {};
-//     getGroupIdFromBotId();
     var request = JSON.parse(this.req.chunks[0]),
-    botRegex = /^\/cool guy$/,
-    botStopRegex = /^\/stop slapping trolls$/;
+    var botRegex = /^\/ready to wipe trolls$/,
+    botStopRegex = /^\/stop punishing trolls$/;
+
+    // this.res.writeHead(200);
+    //     postMessage();
+    //     this.res.end();
+    //     // This interval is critical to keep checking the messages
+    //     // intervalObject = setInterval(function() {
+    //         scanMessagesForRejoin();
+    //     // }, 1000);
 
     if(request.text && botRegex.test(request.text)) {
         this.res.writeHead(200);
         postMessage();
         this.res.end();
-        // This interval is critical to keep checking the messages
-//         intervalObject = setInterval(function() {
-//             scanMessagesForRejoin();
-//         }, 1000)
+        //This interval is critical to keep checking the messages
+        intervalObject = setInterval(function() {
+            scanMessagesForRejoin();
+        }, 1000);
     } 
     else if(request.text && botStopRegex.test(request.text)) {
         clearInterval(intervalObject);
@@ -177,8 +154,8 @@ function respond() {
 function postMessage() {
   var botResponse, options, body, botReq;
 
-  botResponse = cool();
-//   botResponse = "Let''s wipeout these wild people."; 
+  // botResponse = cool();
+  botResponse = "Let's wipeout these wild people. " + cool(); 
 
   options = {
     hostname: 'api.groupme.com',
@@ -194,8 +171,9 @@ function postMessage() {
   console.log('sending ' + botResponse + ' to ' + botID);
 
   botReq = HTTPS.request(options, function(res) {
+      // The bot statusCode is 202 for POST
       if(res.statusCode == 202) {
-        //neat
+        console.log("successfull initiating wipeout.");
       } else {
         console.log('rejecting bad status code ' + res.statusCode);
       }
