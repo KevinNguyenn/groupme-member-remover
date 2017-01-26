@@ -1,17 +1,20 @@
 
 var HTTPS = require('https');
 var cool = require('cool-ascii-faces');
+var _ = require('lodash');
 
 // INSERT TOKEN HERE
 var userToken = '5TLh7xi39LdkO2uEqk1UER6YsgMpReJkwDrByqIr';
 
 // This bot id will be pre-determined based on the group that is selected from the GroupMe bot form.
 var botID = process.env.BOT_ID;
-// var botID = "27859026beede2528022f084d4";
+// var botID = "76e29028f8cd58f2be77564806";
 var groupId = process.env.GROUP_ID;
+// var groupId = 28358807;
 
 var warningUsers = [];
 var trollUsers = [];
+var membersInGroup = [];
 
 function scanMessagesForRejoin() {
     console.log("scan messages for rejoin");
@@ -37,11 +40,15 @@ function scanMessagesForRejoin() {
                 console.log(messages);
                 // Parse messages to see if theres a troll in the group
                 for(var i = 0; i < messages.length - 1; i++) {
-                    if(messages[i].event && messages[i+1].event) {
+                    if(messages[i].event != null && messages[i+1].event != null) {
+                        console.log(messages[i].event);
+                        console.log(messages[i+1].event);
                         if(messages[i].event.type == "membership.announce.rejoined" && messages[i+1].event.type == "membership.notifications.exited") {
-                            if(messages[i].event.data.user.id == messages[i].event.data.removed_user.id) {
+                            if(messages[i].event.data.user.id == messages[i+1].event.data.removed_user.id) {
                                 var potentialTrollUser = _.filter(warningUsers, {'id': messages[i].event.data.user.id});
-                                if(potentialTrollUser == null) {
+                                console.log("potential troll!");
+                                console.log(potentialTrollUser);
+                                if(potentialTrollUser.length == 0) {
                                     warningUsers.push(messages[i].event.data.user);
                                 }
                                 else {
@@ -66,20 +73,29 @@ function scanMessagesForRejoin() {
 
 function removeUser(trollUser) {
     var botReq;
-    console.log("this is trollUser " + trollUser);
-    var options = {
-        hostname: 'api.groupme.com',
-        path: '/v3/groups/' + groupId + '/members/' + trollUser.id + '/remove',
-        method: 'POST'
-    }
+    console.log("removing troll user... ");
+    console.log(trollUser.id);
+    console.log(membersInGroup);
 
-    botReq = HTTPS.request(options, function(res) {
-      if(res.statusCode == 202) {
-        //neat
-      } else {
-        console.log('rejecting bad status code ' + res.statusCode);
+    var trollUserInfo = _.filter(membersInGroup, {"user_id": trollUser.id.toString()});
+    if(trollUserInfo.length == 1) {
+      console.log("removing...");
+      var options = {
+          hostname: 'api.groupme.com',
+          path: '/v3/groups/' + groupId + '/members/' + trollUserInfo[0].id + '/remove?token=' + userToken,
+          method: 'POST'
       }
-    });
+      console.log(options.path);
+      botReq = HTTPS.request(options, function(res) {
+        if(res.statusCode == 200) {
+          //neat
+        } else {
+          console.log('rejecting bad status code ' + res.statusCode);
+        }
+      });
+      botReq.end();
+    }
+    
 
     var botResponse = "eliminated. Life will be better without their EXTRA presence. " + cool();
     
@@ -119,6 +135,41 @@ function removeUser(trollUser) {
       botReq.end(JSON.stringify(body));
 }
 
+function getGroupInfo() {
+  var options = {
+    hostname: 'api.groupme.com',
+    path: '/v3/groups?token=' + userToken,
+    method: 'GET'
+  }
+  console.log("getting group info " + options.path);
+  var output = '', groups = [];
+  var botReq = HTTPS.request(options, function(res) {
+    if(res.statusCode == 200) {
+            console.log("fetching groups...");
+            res.on('data', function(chunk) {
+                output += chunk
+            });
+            res.on('end', function() {
+                var obj = JSON.parse(output);
+                groups = obj.response;
+                // Parse groups to find members with corresponding group id
+                var theGroup = _.filter(groups, {"group_id" : groupId.toString()});
+                if(theGroup.length == 1) {
+                  membersInGroup = theGroup[0].members;
+                }
+            });
+        }
+        else {
+          console.log("something bad happened while fetching... " + res);
+        }
+  });
+
+  botReq.on('error', function(err) {
+    console.log('error fetching... '  + JSON.stringify(err));
+  });
+
+  botReq.end();
+}
 
 
 // Main function
@@ -127,24 +178,27 @@ function respond() {
     var intervalObject = {};
     var request = JSON.parse(this.req.chunks[0]),
     botRegex = /^\/ready to wipe trolls/,
+    // var botRegex = /^\/ready to wipe trolls/,
     botStopRegex = /^\/stop punishing trolls/;
 
     // this.res.writeHead(200);
     //     postMessage();
     //     this.res.end();
+    //     getGroupInfo();
     //     // This interval is critical to keep checking the messages
-    //     // intervalObject = setInterval(function() {
+    //     intervalObject = setInterval(function() {
     //         scanMessagesForRejoin();
-    //     // }, 1000);
+    //     }, 5000);
 
     if(request.text && botRegex.test(request.text)) {
         this.res.writeHead(200);
         postMessage("Let's wipeout these wild people. ");
         this.res.end();
+        getGroupInfo();
         //This interval is critical to keep checking the messages
         intervalObject = setInterval(function() {
             scanMessagesForRejoin();
-        }, 1000);
+        }, 3000);
     } 
     else if(request.text && botStopRegex.test(request.text)) {
         this.res.writeHead(200);
