@@ -8,7 +8,7 @@ var userToken = '5TLh7xi39LdkO2uEqk1UER6YsgMpReJkwDrByqIr';
 // This bot id will be pre-determined based on the group that is selected from the GroupMe bot form.
 var botID = process.env.BOT_ID;
 // var botID = "27859026beede2528022f084d4";
-var groupId = 28358807;
+var groupId = process.env.GROUP_ID;
 
 var warningUsers = [];
 var trollUsers = [];
