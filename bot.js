@@ -43,7 +43,8 @@ function scanMessagesForRejoin() {
                     if(messages[i].event != null && messages[i+1].event != null) {
                         console.log(messages[i].event);
                         console.log(messages[i+1].event);
-                        if(messages[i].event.type == "membership.announce.rejoined" && messages[i+1].event.type == "membership.notifications.exited") {
+                        if((messages[i].event.type == "membership.announce.rejoined" && messages[i+1].event.type == "membership.notifications.exited") 
+                           || messages[i+1].event.type == "membership.announce.rejoined" && messages[i].event.type == "membership.notifications.exited") {
                             if(messages[i].event.data.user.id == messages[i+1].event.data.removed_user.id) {
                                 var potentialTrollUser = _.filter(warningUsers, {'id': messages[i].event.data.user.id});
                                 console.log("potential troll!");
